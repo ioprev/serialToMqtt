@@ -34,13 +34,9 @@ def config_serial(config_serial):
     s.port = config_serial['Port']
     s.baudrate = config_serial['Baudrate']
 
-def get_topic(config_mqtt, data):
+def get_topic(config_mqtt, message_topic):
     if config_mqtt['Topic']:
-        return config_mqtt['TopicPrefix'] + "/" + config_mqtt['Topic'] \
-                + "/" + config_mqtt['TopicSuffix']
-    elif data['id']:
-        return config_mqtt['TopicPrefix'] + "/" + str(data['id']) \
-                + "/" + config_mqtt['TopicSuffix']
+        return config_mqtt['Topic'] + "/" + message_topic
     else:
         print("A topic must be specified!")
         sys.exit(1)
@@ -92,23 +88,19 @@ if __name__ == "__main__":
 
     while True:
         try:
-
             # Reading and decoding data
             s_data = s.readline().decode()[:-2]
             data = json.loads(s_data)
             time.sleep(2)
 
+            for topic, payload in data:     # Publishing
             # Preparing MQTT topic and payload
-            topic = get_topic(config['Broker'], data)
-            data.pop('id', None) # If data contains an "id", it is removed
-            payload = json.dumps(data)
-
-            # Publishing
-            try:
-                client.publish(topic, payload)
-                print("Published: " + payload + " Topic: " + topic)
-            except Exception as e:
-                raise e
+                topic = get_topic(config['Broker'], topic)
+                try:
+                    client.publish(topic, payload)
+                    print("Published: " + payload + " Topic: " + topic)
+                except Exception as e:
+                    raise e
 
         except Exception as e:
             s.flush()
