@@ -98,7 +98,7 @@ if __name__ == "__main__":
                 topic = get_topic(config['Broker'], topic)
                 try:
                     client.publish(topic, payload)
-                    print("Published: " + payload + " Topic: " + topic)
+                    print("Published: " + str(payload) + " Topic: " + topic)
                 except Exception as e:
                     raise e
 
