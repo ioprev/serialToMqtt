@@ -25,7 +25,7 @@ def configure_mqtt_client(config_mqtt):
     client = mqtt.Client(config_mqtt['ClientID'])
     client.connect(config_mqtt['Host'], config_mqtt['Port'])
 
-    print("\nConnectig to MQTT broker: " + config_mqtt['Host'] \
+    print("\nConnecting to MQTT broker: " + config_mqtt['Host'] \
             + ":" + str(config_mqtt['Port']))
 
     return client
@@ -93,7 +93,7 @@ if __name__ == "__main__":
             data = json.loads(s_data)
             time.sleep(2)
 
-            for topic, payload in data:     # Publishing
+            for topic, payload in data.items():     # Publishing
             # Preparing MQTT topic and payload
                 topic = get_topic(config['Broker'], topic)
                 try:
